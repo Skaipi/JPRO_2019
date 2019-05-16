@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
+#include "fluid_point.h"
+
 void filledRect(void *r_in,
                 int x, int y, int w, int h,
                 int r, int g, int b, int a)
