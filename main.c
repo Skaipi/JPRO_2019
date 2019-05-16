@@ -75,7 +75,14 @@ int pollEventsForQuit() {
 }
 
 int main(int argc, char* args[]) {
-//TODO: Handle file input
+	FILE* input_file;
+	if (argc > 0) {
+		input_file = fopen(args[0], "r");
+		if (input_file == NULL) {
+			fprintf(stderr, "Nie udalo sie otworzyc pliku %s", args[0]);
+		}
+	}
+
 	int wndSize = 640;
 	SDL_Renderer *renderer = init(WindowSize, WindowSize);
 
@@ -91,6 +98,7 @@ int main(int argc, char* args[]) {
 		SDL_RenderPresent(renderer); // Update screen.
 	}
 
+	if (input_file != NULL) fclose(input_file);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	return 0;
