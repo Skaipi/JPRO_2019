@@ -20,7 +20,7 @@ typedef struct FluidBlock FluidBlock;
 void FluidBlockFree(FluidBlock *block);
 
 /* Works like constructor */
-FluidBlock* FluidBlockCreate(int size, int diffusion, int viscosity, float dt);
+FluidBlock* FluidBlockCreate(int diffusion, int viscosity);
 
 void FluidBlockAddDensity(FluidBlock *block, int x, int y, float amount);
 

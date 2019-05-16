@@ -1,15 +1,21 @@
 #include <math.h>
 #include "fluid_simulation.h"
 
-void SetBoundary(int b, float *x, int N)
+extern const unsigned int WindowSize;
+extern const unsigned int Iter;
+extern const double dt;
+
+#define N WindowSize
+
+void SetBoundary(int b, float *x)
 {
 	// Manage top and bottom wall
-	for(int i = 1; i < N - 1; i++) {
+	for(unsigned int i = 1; i < N - 1; i++) {
 		x[i + 0*N] = b == 2 ? -x[i + 1*N] : x[i + 1*N];
 		x[i + (N-1)*N] = b == 2 ? -x[i + (N-2)*N] : x[i + (N-2)*N];
 	}
 	// Manage left and right
-	for(int j = 1; j < N - 1; j++) {
+	for(unsigned int j = 1; j < N - 1; j++) {
 		x[0 + j*N]   = b == 1 ? -x[1  + j*N]  : x[1  + j*N];
 		x[N-1 + j*N] = b == 1 ? -x[N-2 + j*N] : x[N-2+ j*N];
 	}
@@ -20,12 +26,12 @@ void SetBoundary(int b, float *x, int N)
 	x[N-1 + (N-1)*N] = 0.33f * (x[N-2 + (N-1)*N] + x[N-1 + (N-2)*N] + x[N-1 + (N-1)*N]);
 }
 
-void LinSolve(int b, float *x, float *x0, float a, float c, int iter, int N)
+void LinSolve(int b, float *x, float *x0, float a, float c)
 {
 	float cRecip = 1.0 / c;
-	for (int k = 0; k < iter; k++) {
-		for (int j = 1; j < N - 1; j++) {
-			for (int i = 1; i < N - 1; i++) {
+	for (unsigned int k = 0; k < Iter; k++) {
+		for (unsigned int j = 1; j < N - 1; j++) {
+			for (unsigned int i = 1; i < N - 1; i++) {
 				x[i + j*N] =
 					(x0[i + j*N]
                             + a*( x[i+1 + j*N    ]
@@ -37,20 +43,20 @@ void LinSolve(int b, float *x, float *x0, float a, float c, int iter, int N)
                            )) * cRecip;
 			}
 		}
-		SetBoundary(b, x, N);
+		SetBoundary(b, x);
 	}
 }
 
-void Diffuse (int b, float *x, float *x0, float diff, float dt, int iter, int N)
+void Diffuse (int b, float *x, float *x0, float diff)
 {
     float a = dt * diff * (N - 2) * (N - 2);
-    LinSolve(b, x, x0, a, 1 + 6 * a, iter, N);
+    LinSolve(b, x, x0, a, 1 + 6 * a);
 }
 
-void Project(float *velocX, float *velocY, float *p, float *div, int iter, int N)
+void Project(float *velocX, float *velocY, float *p, float *div)
 {
-	for (int j = 1; j < N - 1; j++) {
-		for (int i = 1; i < N - 1; i++) {
+	for (unsigned int j = 1; j < N - 1; j++) {
+		for (unsigned int i = 1; i < N - 1; i++) {
 			div[i + j*N] = -0.5f*(
 			         velocX[i+1 + j*N] - velocX[i-1 + j*N]
 			        +velocY[i + (j+1)*N] - velocY[i + (j-1)*N]
@@ -59,22 +65,22 @@ void Project(float *velocX, float *velocY, float *p, float *div, int iter, int N
 		}
 	}
     
-    SetBoundary(0, div, N); 
-    SetBoundary(0, p, N);
-    LinSolve(0, p, div, 1, 6, iter, N);
+    SetBoundary(0, div); 
+    SetBoundary(0, p);
+    LinSolve(0, p, div, 1, 6);
     
-	for (int j = 1; j < N - 1; j++) {
-		for (int i = 1; i < N - 1; i++) {
+	for (unsigned int j = 1; j < N - 1; j++) {
+		for (unsigned int i = 1; i < N - 1; i++) {
 			velocX[i + j*N] -= 0.5f * (p[i+1 + j*N] - p[i+i-1 + j*N]) * N;
 			velocY[i + j*N] -= 0.5f * (p[i+i + (j+1)*N] - p[i+i + (j-1)*N]) * N;
 		}
 	}
 
-    SetBoundary(1, velocX, N);
-    SetBoundary(2, velocY, N);
+    SetBoundary(1, velocX);
+    SetBoundary(2, velocY);
 }
 
-void AddVection(int b, float *d, float *d0,  float *velocX, float *velocY, float dt, int N)
+void AddVection(int b, float *d, float *d0,  float *velocX, float *velocY)
 {
     float i0, i1, j0, j1;
     
@@ -86,7 +92,7 @@ void AddVection(int b, float *d, float *d0,  float *velocX, float *velocY, float
     
     float Nfloat = N;
     float ifloat, jfloat;
-	int i, j;    
+	unsigned int i, j;    
 
 	for(j = 1, jfloat = 1; j < N - 1; j++, jfloat++) {
 		for( i = 1, ifloat = 1; i < N - 1; i++, ifloat++) { 
@@ -119,5 +125,5 @@ void AddVection(int b, float *d, float *d0,  float *velocX, float *velocY, float
 			   +s1 * ( t0 * d0[i1i + j0i*N] + t1 * d0[i1i + j1i*N]);
         }
     }
-    SetBoundary(b, d, N);
+    SetBoundary(b, d);
 }
