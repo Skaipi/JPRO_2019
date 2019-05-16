@@ -1,9 +1,5 @@
 Projekt koñcowy z zajêæ Jezyki Programowanie 2019
 
-==================================================
-Kompilacja: plik makefile
-==================================================
+- Kompilacja: plik makefile
 
-==================================================
-Biblioteki: SDL2
-==================================================
+- Biblioteki: SDL2
