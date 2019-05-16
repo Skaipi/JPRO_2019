@@ -14,41 +14,10 @@ struct FluidPoint {
     float *vxPrev;
     float *vyPrev;
 };
+typedef struct FluidPoint FluidPoint;
 
 /* Free allocated memory */
-void FluidPointFree(FluidCube *point)
-{
-    free(point->s);
-    free(point->density);
-    
-    free(point->vxCurr);
-    free(point->vyCurr);
-    
-    free(point->vxPrev);
-    free(point->vyPrev);
-    
-    free(point);
-}
+void FluidPointFree(FluidPoint *point);
 
 /* Works like constructor */
-FluidCube* FluidPointCreate(int size, int diffusion, int viscosity, float dt)
-{
-    FluidCube *point = malloc(sizeof(*point));
-    int N = size;
-    
-    point->size = size;
-    point->dt = dt;
-    point->diff = diffusion;
-    point->visc = viscosity;
-    
-    point->s = calloc(N * N, sizeof(float));
-    point->density = calloc(N * N, sizeof(float));
-    
-    point->vxCurr = calloc(N * N, sizeof(float));
-    point->vyCurr = calloc(N * N, sizeof(float));
-    
-    point->vxPrev = calloc(N * N, sizeof(float));
-    point->vyPrev = calloc(N * N, sizeof(float));
-    
-    return point;
-}
+FluidPoint* FluidPointCreate(int size, int diffusion, int viscosity, float dt);

@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
-#include "fluid_point.h"
+static const unsigned int WindowSize = 640;
 
 void filledRect(void *r_in,
                 int x, int y, int w, int h,
@@ -11,7 +11,7 @@ void filledRect(void *r_in,
 {
 	SDL_Renderer* renderer = (SDL_Renderer*)r_in;
 	int fillColorResult = SDL_SetRenderDrawColor(renderer, r, g, b, a);
-	if (fillColorReslut != 0) {
+	if (fillColorResult != 0) {
 		fprintf(stderr, "SDL_SetRenderDrawColor failed: %s\n", SDL_GetError());
 		exit(1);
 	}
@@ -75,11 +75,12 @@ int pollEventsForQuit() {
 }
 
 int main(int argc, char* args[]) {
+//TODO: Handle file input
 	int wndSize = 640;
-	SDL_Renderer *renderer = init(wndSize, wndSieze);
+	SDL_Renderer *renderer = init(WindowSize, WindowSize);
 
 	for (;;) {
-		if (pollEventsForQuit()) goto quit;
+		if (pollEventsForQuit()) break;
     	int drawResult = SDL_SetRenderDrawColor(renderer, 16, 16, 16, 255);
 		if (drawResult != 0) {
 			fprintf(stderr, "SDL_SetRenderDrawColor failed: %s\n", SDL_GetError());
@@ -89,9 +90,8 @@ int main(int argc, char* args[]) {
 		filledRect(renderer, wndSize/2 - 50/2, wndSize/2 - 50/2, 50, 50, 255, 0, 0, 128);
 		SDL_RenderPresent(renderer); // Update screen.
 	}
-quit:
+
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
-
 	return 0;
 }
