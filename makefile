@@ -1,0 +1,1 @@
+gcc main.c -Wall -Wextra -o main.exe -lmingw32  -lSDL2main -lSDL2
