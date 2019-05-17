@@ -10,20 +10,20 @@ extern const double dt;
 void SetBoundary(int b, float *x)
 {
 	// Manage top and bottom wall
-	for(unsigned int i = 1; i < N - 1; i++) {
-		x[i + 0*N] = b == 2 ? -x[i + 1*N] : x[i + 1*N];
+	for (unsigned int i = 1; i < N - 1; i++) {
+		x[i + 0] = b == 2 ? -x[i + 1*N] : x[i + 1*N];
 		x[i + (N-1)*N] = b == 2 ? -x[i + (N-2)*N] : x[i + (N-2)*N];
 	}
 	// Manage left and right
-	for(unsigned int j = 1; j < N - 1; j++) {
+	for (unsigned int j = 1; j < N -1; j++) {
 		x[0 + j*N]   = b == 1 ? -x[1  + j*N]  : x[1  + j*N];
 		x[N-1 + j*N] = b == 1 ? -x[N-2 + j*N] : x[N-2+ j*N];
 	}
     
-	x[0 + 0]         = 0.33f * (x[1 + 0]         + x[0 + 1*N]       + x[0 + 0*N]);
-	x[0 + (N-1)*N]   = 0.33f * (x[1 + (N-1)*N]   + x[0 + (N-2)*N]   + x[0 + (N-1)*N]);
-	x[N-1 + 0*N]     = 0.33f * (x[N-2 + 0*N]     + x[N-1 + 1*N]     + x[N-1 + 0*N]);
-	x[N-1 + (N-1)*N] = 0.33f * (x[N-2 + (N-1)*N] + x[N-1 + (N-2)*N] + x[N-1 + (N-1)*N]);
+	x[0 + 0]         = 0.5f * (x[1 + 0]         + x[0 + 1*N]       + x[0 + 0*N]);
+	x[0 + (N-1)*N]   = 0.5f * (x[1 + (N-1)*N]   + x[0 + (N-2)*N]   + x[0 + (N-1)*N]);
+	x[N-1 + 0*N]     = 0.5f * (x[N-2 + 0*N]     + x[N-1 + 1*N]     + x[N-1 + 0*N]);
+	x[N-1 + (N-1)*N] = 0.5f * (x[N-2 + (N-1)*N] + x[N-1 + (N-2)*N] + x[N-1 + (N-1)*N]);
 }
 
 void LinSolve(int b, float *x, float *x0, float a, float c)
@@ -38,8 +38,6 @@ void LinSolve(int b, float *x, float *x0, float a, float c)
                                  +x[i-1 + j*N    ]
                                  +x[i   + (j+1)*N]
                                  +x[i   + (j-1)*N]
-                                 +x[i   + j*N    ]
-                                 +x[i   + j*N    ]
                            )) * cRecip;
 			}
 		}
@@ -66,13 +64,13 @@ void Project(float *velocX, float *velocY, float *p, float *div)
 	}
     
     SetBoundary(0, div); 
-    SetBoundary(0, p);
+   	SetBoundary(0, p);
     LinSolve(0, p, div, 1, 6);
     
 	for (unsigned int j = 1; j < N - 1; j++) {
 		for (unsigned int i = 1; i < N - 1; i++) {
-			velocX[i + j*N] -= 0.5f * (p[i+1 + j*N] - p[i+i-1 + j*N]) * N;
-			velocY[i + j*N] -= 0.5f * (p[i+i + (j+1)*N] - p[i+i + (j-1)*N]) * N;
+			velocX[i + j*N] -= 0.5f * (p[i+1 + j*N] - p[i-1 + j*N]) * N;
+			velocY[i + j*N] -= 0.5f * (p[i + (j+1)*N] - p[i + (j-1)*N]) * N;
 		}
 	}
 
@@ -115,10 +113,10 @@ void AddVection(int b, float *d, float *d0,  float *velocX, float *velocY)
 			t1 = y - j0; 
 			t0 = 1.0f - t1;
 			
-			int i0i = i0;
-			int i1i = i1;
-			int j0i = j0;
-			int j1i = j1;
+			int i0i = (int)i0;
+			int i1i = (int)i1;
+			int j0i = (int)j0;
+			int j1i = (int)j1;
 			
 			d[i + j*N] =	
 				s0 * ( t0 * d0[i0i + j0i*N] + t1 * d0[i0i + j1i*N])

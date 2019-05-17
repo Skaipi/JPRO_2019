@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
@@ -40,9 +41,14 @@ int main(int argc, char* args[]) {
 	}
 
 	// Initialize simulation
+	srand(time(NULL));
 	float diffiusion = 0;
 	float viscosity = 0;
 	FluidBlock* myFluid = FluidBlockCreate(diffiusion, viscosity);
+
+	float time = 0;
+	int dirX = (rand()%3) - 1;
+	int dirY = (rand()%3) - 1;
 
 	// Chcek SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
@@ -68,26 +74,14 @@ int main(int argc, char* args[]) {
 		if (pollEventsForQuit()) break;
 		// keybord interuption
 		//const Uint8 *state = SDL_GetKeyboardState(NULL);
-		//if (state[SDL_SCANCODE_SPACE]) {
-			FluidBlockAddDensity(myFluid, WindowSize/2, WindowSize/2, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2, WindowSize/2, 15, 50);
-			
-			FluidBlockAddDensity(myFluid, WindowSize/2-1, WindowSize/2, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2-1, WindowSize/2, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2+1, WindowSize/2, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2+1, WindowSize/2, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2-1, WindowSize/2-1, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2-1, WindowSize/2-1, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2+1, WindowSize/2-1, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2+1, WindowSize/2-1, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2-1, WindowSize/2+1, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2-1, WindowSize/2+1, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2+1, WindowSize/2+1, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2+1, WindowSize/2+1, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2, WindowSize/2-1, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2, WindowSize/2-1, 15, 50);
-			FluidBlockAddDensity(myFluid, WindowSize/2, WindowSize/2+1, 255);
-			FluidBlockAddVelocity(myFluid, WindowSize/2, WindowSize/2+1, 15, 50);
+		//if (state[SDL_SCANCODE_SPACEa]) {
+			time += dt;
+			if (time > 32) {
+				dirX = (rand()%3) - 1;
+				dirY = (rand()%3) - 1;
+				time = 0;
+			} 
+			FluidBlockSpawnSource(myFluid, WindowSize/2, WindowSize/2, 10, 10, dirX, dirY);
 		//}
 		FluidBlockSimulationStep(myFluid);
 		// drawing

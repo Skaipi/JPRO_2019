@@ -81,3 +81,13 @@ void FluidBlockSimulationStep(FluidBlock *block)
 	Diffuse(0, s, density, diff);
 	AddVection(0, density, s, vxCurr, vyCurr);
 }
+
+void FluidBlockSpawnSource(FluidBlock* block, int x, int y, int w, int h, int dirX, int dirY)
+{
+	for (int i = -w/2; i < w/2; i++) {
+		for (int j = -h/2; j < h/2; j++) {
+			FluidBlockAddDensity(block, x+i, y+j, 128);
+			FluidBlockAddVelocity(block, x+i, y+j, dirX*10, dirY*10);
+		}
+	}
+}
