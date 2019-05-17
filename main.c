@@ -8,12 +8,13 @@
 #include "fluid_graphics.h"
 
 /* Those are indended global variables */
-const unsigned int WindowSize = 320;
+const unsigned int WindowSize = 160;
+const unsigned int Scale = 4;
 const unsigned int Iter = 4;
 const double dt = 0.02;
 
 // Handle exit event
-int pollEventsForQuit() {
+int PollEventsForQuit() {
 	SDL_Event e;
 	while (SDL_PollEvent(&e)) {
 		switch (e.type) {
@@ -46,16 +47,13 @@ int main(int argc, char* args[]) {
 	float viscosity = 0;
 	FluidBlock* myFluid = FluidBlockCreate(diffiusion, viscosity);
 
-	float time = 0;
-	int dirX = (rand()%3) - 1;
-	int dirY = (rand()%3) - 1;
-
 	// Chcek SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
 		fprintf(stderr, "SDL failed");
 		return 3;
 	}
-	SDL_Window *win = SDL_CreateWindow("Base Code", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,WindowSize,WindowSize, SDL_WINDOW_SHOWN);
+	SDL_Window *win = SDL_CreateWindow("Base Code", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                       WindowSize*Scale, WindowSize*Scale, SDL_WINDOW_SHOWN);
 	if (win == NULL) {
 		fprintf(stderr, "SDL failed");
 		SDL_Quit();
@@ -69,20 +67,26 @@ int main(int argc, char* args[]) {
 		return 1;
 	}
 
+	// Initialize mouse event
+	int mouseXCurr = 0, mouseXPrev = 0; 
+	int mouseYCurr = 0, mouseYPrev = 0;
+	SDL_PumpEvents();
+
 	// main loop
 	for (;;) {
-		if (pollEventsForQuit()) break;
+		if (PollEventsForQuit()) break;
 		// keybord interuption
 		//const Uint8 *state = SDL_GetKeyboardState(NULL);
 		//if (state[SDL_SCANCODE_SPACEa]) {
-			time += dt;
-			if (time > 32) {
-				dirX = (rand()%3) - 1;
-				dirY = (rand()%3) - 1;
-				time = 0;
-			} 
-			FluidBlockSpawnSource(myFluid, WindowSize/2, WindowSize/2, 10, 10, dirX, dirY);
 		//}
+		if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
+			FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
+                                  1, 1);
+			//printf("%d %d | %d %d\n", mouseXCurr/Scale, mouseYCurr/Scale, mouseXPrev/Scale, mouseYPrev/Scale);
+			mouseXPrev = mouseXCurr;
+			mouseYPrev = mouseYCurr;
+		}
+
 		FluidBlockSimulationStep(myFluid);
 		// drawing
 		Draw(renderer, myFluid);

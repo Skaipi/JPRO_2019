@@ -5,6 +5,7 @@
 #include "fluid_graphics.h"
 
 extern unsigned int WindowSize;
+extern unsigned int Scale;
 
 #define N WindowSize
 
@@ -22,11 +23,18 @@ void Draw(SDL_Renderer* renderer, FluidBlock* block)
 
 void DrawDensity(SDL_Renderer* renderer, FluidBlock* block)
 {
-	for (unsigned int j=0; j < N; j++) {
-		for (unsigned int i=0; i< N; i++) {
-			float d = block->density[i + j*N];
+	for (unsigned int j=0; j < N*Scale; j += Scale) {
+		for (unsigned int i=0; i < N*Scale; i += Scale) {
+			SDL_Rect rect;
+			rect.x = i;
+			rect.y = j;
+			rect.w = Scale;
+			rect.h = Scale;
+			
+			float d = block->density[i/Scale + j*N/Scale];
 			SDL_SetRenderDrawColor(renderer, 0, d, d, d);
-			SDL_RenderDrawPoint(renderer, i, j);
+			SDL_RenderFillRect(renderer, &rect);
+			//SDL_RenderDrawPoint(renderer, i, j);
 		}
 	}
 }

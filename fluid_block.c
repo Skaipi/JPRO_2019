@@ -86,8 +86,8 @@ void FluidBlockSpawnSource(FluidBlock* block, int x, int y, int w, int h, int di
 {
 	for (int i = -w/2; i < w/2; i++) {
 		for (int j = -h/2; j < h/2; j++) {
-			FluidBlockAddDensity(block, x+i, y+j, 128);
-			FluidBlockAddVelocity(block, x+i, y+j, dirX*10, dirY*10);
+			FluidBlockAddDensity(block, x+i, y+j, 32);
+			FluidBlockAddVelocity(block, x+i, y+j, dirX, dirY);
 		}
 	}
 }
