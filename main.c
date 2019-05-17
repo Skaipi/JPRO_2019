@@ -7,11 +7,20 @@
 #include "fluid_block.h"
 #include "fluid_graphics.h"
 
+#undef main
+
 /* Those are indended global variables */
 const unsigned int WindowSize = 160;
 const unsigned int Scale = 4;
 const unsigned int Iter = 4;
 const double dt = 0.02;
+
+int sgn(int value)
+{
+	if (value > 0) return 1;
+	if (value < 0) return -1;
+	return 0;
+}
 
 // Handle exit event
 int PollEventsForQuit() {
@@ -75,13 +84,14 @@ int main(int argc, char* args[]) {
 	// main loop
 	for (;;) {
 		if (PollEventsForQuit()) break;
-		// keybord interuption
-		//const Uint8 *state = SDL_GetKeyboardState(NULL);
-		//if (state[SDL_SCANCODE_SPACEa]) {
-		//}
+		// Keybord interuption
+		const Uint8 *state = SDL_GetKeyboardState(NULL);
+		if (state[SDL_SCANCODE_SPACE]) {
+		}
+		// Mouse input
 		if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
 			FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
-                                  1, 1);
+                                  sgn(mouseXCurr-mouseXPrev), sgn(mouseYCurr-mouseYPrev));
 			//printf("%d %d | %d %d\n", mouseXCurr/Scale, mouseYCurr/Scale, mouseXPrev/Scale, mouseYPrev/Scale);
 			mouseXPrev = mouseXCurr;
 			mouseYPrev = mouseYCurr;
