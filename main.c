@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_DEPRECATE // For visual studio compilation
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -22,6 +24,14 @@ int sgn(int value)
 	return 0;
 }
 
+void ManageFileInput(FILE *input, float *diffiusion, float *viscosity, float *density, float *force)
+{
+	fscanf(input, "%f", diffiusion);
+	fscanf(input, "%f", viscosity);
+	fscanf(input, "%f", density);
+	fscanf(input, "%f", force);
+}
+
 // Handle exit event
 int PollEventsForQuit() {
 	SDL_Event e;
@@ -44,9 +54,12 @@ int main(int argc, char* args[]) {
 	// Input handle area
 	FILE* input_file;
 	if (argc > 0) {
-		input_file = fopen(args[0], "r");
+		input_file = fopen(args[1], "r");
 		if (input_file == NULL) {
 			fprintf(stderr, "Nie udalo sie otworzyc pliku %s", args[0]);
+		}
+		else {
+			printf("file opened with succes");
 		}
 	}
 
@@ -54,29 +67,32 @@ int main(int argc, char* args[]) {
 	srand(time(NULL));
 	float diffiusion = 0;
 	float viscosity = 0;
+	float density = 32;
+	float force = 1;
+	if (input_file) ManageFileInput(input_file, &diffiusion, &viscosity, &density, &force);
 	FluidBlock* myFluid = FluidBlockCreate(diffiusion, viscosity);
 
-	// Chcek SDL
+	// Chcek SDL init
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
 		fprintf(stderr, "SDL failed");
-		return 3;
+		return 1;
 	}
 	SDL_Window *win = SDL_CreateWindow("Base Code", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                        WindowSize*Scale, WindowSize*Scale, SDL_WINDOW_SHOWN);
 	if (win == NULL) {
 		fprintf(stderr, "SDL failed");
 		SDL_Quit();
-		return 4;
+		return 2;
 	}
 	SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL) {
-		puts("SDL failed");
+		fprintf(stderr, "SDL failed");
 		SDL_DestroyWindow(win);
 		SDL_Quit();
-		return 1;
+		return 3;
 	}
 
-	// Initialize mouse event
+	// Initialize mouse events
 	int mouseXCurr = 0, mouseXPrev = 0; 
 	int mouseYCurr = 0, mouseYPrev = 0;
 	SDL_PumpEvents();
@@ -84,15 +100,14 @@ int main(int argc, char* args[]) {
 	// main loop
 	for (;;) {
 		if (PollEventsForQuit()) break;
-		// Keybord interuption
+		// Keybord input
 		const Uint8 *state = SDL_GetKeyboardState(NULL);
 		if (state[SDL_SCANCODE_SPACE]) {
 		}
 		// Mouse input
 		if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
 			FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
-                                  sgn(mouseXCurr-mouseXPrev), sgn(mouseYCurr-mouseYPrev));
-			//printf("%d %d | %d %d\n", mouseXCurr/Scale, mouseYCurr/Scale, mouseXPrev/Scale, mouseYPrev/Scale);
+                                  sgn(mouseXCurr-mouseXPrev), sgn(mouseYCurr-mouseYPrev), density, force);
 			mouseXPrev = mouseXCurr;
 			mouseYPrev = mouseYCurr;
 		}
@@ -104,6 +119,7 @@ int main(int argc, char* args[]) {
 
 	// Exit program area
 	if (input_file != NULL) fclose(input_file);
+	FluidBlockFree(myFluid);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
 	return 0;

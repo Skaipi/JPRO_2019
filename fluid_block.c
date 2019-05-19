@@ -82,12 +82,12 @@ void FluidBlockSimulationStep(FluidBlock *block)
 	AddVection(0, density, s, vxCurr, vyCurr);
 }
 
-void FluidBlockSpawnSource(FluidBlock* block, int x, int y, int w, int h, int dirX, int dirY)
+void FluidBlockSpawnSource(FluidBlock* block, int x, int y, int w, int h, int dirX, int dirY, float density, float force)
 {
 	for (int i = -w/2; i < w/2; i++) {
 		for (int j = -h/2; j < h/2; j++) {
-			FluidBlockAddDensity(block, x+i, y+j, 32);
-			FluidBlockAddVelocity(block, x+i, y+j, dirX, dirY);
+			FluidBlockAddDensity(block, x+i, y+j, density);
+			FluidBlockAddVelocity(block, x+i, y+j, dirX*force, dirY*force);
 		}
 	}
 }

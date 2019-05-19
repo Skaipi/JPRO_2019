@@ -34,7 +34,6 @@ void DrawDensity(SDL_Renderer* renderer, FluidBlock* block)
 			float d = block->density[i/Scale + j*N/Scale];
 			SDL_SetRenderDrawColor(renderer, 0, d, d, d);
 			SDL_RenderFillRect(renderer, &rect);
-			//SDL_RenderDrawPoint(renderer, i, j);
 		}
 	}
 }
