@@ -8,7 +8,7 @@ extern const double dt;
 
 #define N WindowSize
 
-void FluidBlocktFree(FluidBlock *block)
+void FluidBlockFree(FluidBlock *block)
 {
     free(block->s);
     free(block->density);

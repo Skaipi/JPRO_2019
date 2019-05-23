@@ -8,6 +8,7 @@
 
 #include "fluid_block.h"
 #include "fluid_graphics.h"
+#include "output.h"
 
 #undef main
 
@@ -15,7 +16,7 @@
 const unsigned int WindowSize = 160;
 const unsigned int Scale = 4;
 const unsigned int Iter = 4;
-const double dt = 0.02;
+const double dt = 0.05;
 
 int sgn(int value)
 {
@@ -53,13 +54,13 @@ int PollEventsForQuit() {
 int main(int argc, char* args[]) {
 	// Input handle area
 	FILE* input_file;
-	if (argc > 0) {
+	if (argc > 1) {
 		input_file = fopen(args[1], "r");
 		if (input_file == NULL) {
-			fprintf(stderr, "Nie udalo sie otworzyc pliku %s", args[0]);
+			fprintf(stderr, "Nie udalo sie otworzyc pliku %s\n", args[0]);
 		}
 		else {
-			printf("file opened with succes");
+			printf("file opened with succes\n");
 		}
 	}
 
@@ -77,7 +78,7 @@ int main(int argc, char* args[]) {
 		fprintf(stderr, "SDL failed");
 		return 1;
 	}
-	SDL_Window *win = SDL_CreateWindow("Base Code", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+	SDL_Window *win = SDL_CreateWindow("Fluid Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                        WindowSize*Scale, WindowSize*Scale, SDL_WINDOW_SHOWN);
 	if (win == NULL) {
 		fprintf(stderr, "SDL failed");
