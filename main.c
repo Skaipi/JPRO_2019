@@ -58,7 +58,7 @@ int main(int argc, char* args[]) {
 	if (argc > 0) {
 		input_file = fopen(args[1], "r");
 		if (input_file == NULL) {
-			fprintf(stderr, "Nie udalo sie otworzyc pliku %s\n", args[0]);
+			fprintf(stderr, "Nie udalo sie otworzyc pliku wejsciowego\n");
 		}
 		else {
 			printf("file opened with succes\n");
@@ -67,7 +67,7 @@ int main(int argc, char* args[]) {
 
 	// Initialize simulation
 	srand(time(NULL));
-	float simulation_time = 0.0;
+	float time = 0.0, simulation_time=5.0;
 	float diffiusion = 0;
 	float viscosity = 0;
 	float density = 32;
@@ -102,7 +102,7 @@ int main(int argc, char* args[]) {
 
 	// main loop
 	for (;;) {
-		if (PollEventsForQuit() || simulation_time > 5) break;
+		if (PollEventsForQuit() || time > simulation_time) break;
 		// Keybord input
 		const Uint8 *state = SDL_GetKeyboardState(NULL);
 		if (state[SDL_SCANCODE_SPACE]) {
@@ -118,7 +118,7 @@ int main(int argc, char* args[]) {
 		FluidBlockSimulationStep(myFluid);
 		// drawing
 		Draw(renderer, myFluid);
-		simulation_time += dt;
+		time += dt;
     }
 
 	// Exit program area
