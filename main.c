@@ -53,9 +53,8 @@ int PollEventsForQuit() {
 
 int main(int argc, char* args[]) {
 	// Input handle area
-	FILE* input_file;
-	// TODO: check why argc > 1 crashes program
-	if (argc > 0) {
+	FILE* input_file = NULL;
+	if (argc > 1) {
 		input_file = fopen(args[1], "r");
 		if (input_file == NULL) {
 			fprintf(stderr, "Nie udalo sie otworzyc pliku wejsciowego\n");
@@ -72,7 +71,7 @@ int main(int argc, char* args[]) {
 	float viscosity = 0;
 	float density = 32;
 	float force = 1;
-	if (input_file) ManageFileInput(input_file, &diffiusion, &viscosity, &density, &force);
+	if (input_file != NULL) ManageFileInput(input_file, &diffiusion, &viscosity, &density, &force);
 	FluidBlock* myFluid = FluidBlockCreate(diffiusion, viscosity);
 
 	// Chcek SDL init
