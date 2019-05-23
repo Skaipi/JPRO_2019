@@ -16,7 +16,7 @@
 const unsigned int WindowSize = 160;
 const unsigned int Scale = 4;
 const unsigned int Iter = 4;
-const double dt = 0.05;
+const double dt = 0.02;
 
 int sgn(int value)
 {
@@ -54,7 +54,8 @@ int PollEventsForQuit() {
 int main(int argc, char* args[]) {
 	// Input handle area
 	FILE* input_file;
-	if (argc > 1) {
+	// TODO: check why argc > 1 crashes program
+	if (argc > 0) {
 		input_file = fopen(args[1], "r");
 		if (input_file == NULL) {
 			fprintf(stderr, "Nie udalo sie otworzyc pliku %s\n", args[0]);
@@ -66,6 +67,7 @@ int main(int argc, char* args[]) {
 
 	// Initialize simulation
 	srand(time(NULL));
+	float simulation_time = 0.0;
 	float diffiusion = 0;
 	float viscosity = 0;
 	float density = 32;
@@ -100,7 +102,7 @@ int main(int argc, char* args[]) {
 
 	// main loop
 	for (;;) {
-		if (PollEventsForQuit()) break;
+		if (PollEventsForQuit() || simulation_time > 5) break;
 		// Keybord input
 		const Uint8 *state = SDL_GetKeyboardState(NULL);
 		if (state[SDL_SCANCODE_SPACE]) {
@@ -116,9 +118,11 @@ int main(int argc, char* args[]) {
 		FluidBlockSimulationStep(myFluid);
 		// drawing
 		Draw(renderer, myFluid);
+		simulation_time += dt;
     }
 
 	// Exit program area
+	SaveSimulation(myFluid);
 	if (input_file != NULL) fclose(input_file);
 	FluidBlockFree(myFluid);
 	SDL_DestroyRenderer(renderer);

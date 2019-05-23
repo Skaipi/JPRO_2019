@@ -1,0 +1,4 @@
+======SIMULATION_OUTPUT======
+Average velocity:    0.23293
+Average density:    25.16960
+% of space filled:  46.82422
