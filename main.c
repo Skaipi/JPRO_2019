@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
@@ -25,12 +26,37 @@ int sgn(int value)
 	return 0;
 }
 
-void ManageFileInput(FILE *input, float *diffiusion, float *viscosity, float *density, float *force)
+void ManageFileInput(FILE *input, float *diffusion, float *viscosity, float *density, float *force, float *time)
 {
-	fscanf(input, "%f", diffiusion);
-	fscanf(input, "%f", viscosity);
-	fscanf(input, "%f", density);
-	fscanf(input, "%f", force);
+	int i = 0;
+	char line [ 128 ];
+    while ( fgets( line, sizeof line, input ) != NULL ) // read a line
+    {
+		// Check if file is not too large
+		if (i > 258) {
+			fprintf(stderr, "Wrong file type provided");
+			exit(1);
+		}
+		/* Check if line starts with pattern and get float value */
+		if (strncmp(line, "Diffusion:", strlen("Diffusion:")) == 0) {
+			// This regexp reads 2chars after ':'
+			sscanf(line, "%*[^:]%*2c%f", diffusion);
+		}
+		if (strncmp(line, "Viscosity:", strlen("Viscosity:")) == 0) {
+			sscanf(line, "%*[^:]%*2c%f", viscosity);
+		}
+		if (strncmp(line, "Density:", strlen("Density:")) == 0) {
+			sscanf(line, "%*[^:]%*2c%f", density);
+		}
+		if (strncmp(line, "Force:", strlen("Force:")) == 0) {
+			sscanf(line, "%*[^:]%*2c%f", force);
+		}
+		if (strncmp(line, "Time:", strlen("Time:")) == 0) {
+			sscanf(line, "%*[^:]%*2c%f", time);
+		}
+
+		i++;
+    }
 }
 
 // Handle exit event
@@ -67,12 +93,12 @@ int main(int argc, char* args[]) {
 	// Initialize simulation
 	srand(time(NULL));
 	float time = 0.0, simulation_time=5.0;
-	float diffiusion = 0;
+	float diffusion = 0;
 	float viscosity = 0;
 	float density = 32;
 	float force = 1;
-	if (input_file != NULL) ManageFileInput(input_file, &diffiusion, &viscosity, &density, &force);
-	FluidBlock* myFluid = FluidBlockCreate(diffiusion, viscosity);
+	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &time);
+	FluidBlock* myFluid = FluidBlockCreate(diffusion, viscosity);
 
 	// Chcek SDL init
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {

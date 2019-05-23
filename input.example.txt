@@ -1,0 +1,7 @@
+=======Fluid-Simulation-Example-Input=======
+Diffusion: 0.1
+Viscosity: 0.1
+Density: 24.0
+Force = 2.0
+Time = 6.0
+============================================
