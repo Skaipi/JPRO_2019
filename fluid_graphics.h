@@ -1,3 +1,5 @@
+#pragma once
+
 /* Main drawing function */
 void Draw(SDL_Renderer* renderer, FluidBlock* block);
 

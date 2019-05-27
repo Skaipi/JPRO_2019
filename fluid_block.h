@@ -1,3 +1,5 @@
+#pragma once
+
 /* This structure represents block of liquid */
 struct FluidBlock {
     int size;

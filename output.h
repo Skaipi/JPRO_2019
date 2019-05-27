@@ -1,3 +1,5 @@
+#pragma once
+
 /* Save simulation state to file */
 void SaveSimulation(FluidBlock* block);
 

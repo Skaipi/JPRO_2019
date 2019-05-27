@@ -1,3 +1,5 @@
+#pragma once
+
 /* Set boundary of simulation box */
 void SetBoundary(int b, float *x);
 

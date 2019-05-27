@@ -19,6 +19,7 @@ const unsigned int Scale = 4;
 const unsigned int Iter = 4;
 const double dt = 0.02;
 
+// Sign function
 int sgn(int value)
 {
 	if (value > 0) return 1;
@@ -29,7 +30,7 @@ int sgn(int value)
 void ManageFileInput(FILE *input, float *diffusion, float *viscosity, float *density, float *force, float *time)
 {
 	int i = 0;
-	char line [ 128 ];
+	char line[128];
     while ( fgets( line, sizeof line, input ) != NULL ) // read a line
     {
 		// Check if file is not too large
@@ -97,7 +98,7 @@ int main(int argc, char* args[]) {
 	float viscosity = 0;
 	float density = 32;
 	float force = 1;
-	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &time);
+	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &simulation_time);
 	FluidBlock* myFluid = FluidBlockCreate(diffusion, viscosity);
 
 	// Chcek SDL init
@@ -105,6 +106,7 @@ int main(int argc, char* args[]) {
 		fprintf(stderr, "SDL failed");
 		return 1;
 	}
+	// Make window
 	SDL_Window *win = SDL_CreateWindow("Fluid Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                        WindowSize*Scale, WindowSize*Scale, SDL_WINDOW_SHOWN);
 	if (win == NULL) {
@@ -112,6 +114,7 @@ int main(int argc, char* args[]) {
 		SDL_Quit();
 		return 2;
 	}
+	// Make window renderer
 	SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL) {
 		fprintf(stderr, "SDL failed");
@@ -121,17 +124,17 @@ int main(int argc, char* args[]) {
 	}
 
 	// Initialize mouse events
-	int mouseXCurr = 0, mouseXPrev = 0; 
+	int mouseXCurr = 0, mouseXPrev = 0;
 	int mouseYCurr = 0, mouseYPrev = 0;
 	SDL_PumpEvents();
 
 	// main loop
 	for (;;) {
+        // Exit
 		if (PollEventsForQuit() || time > simulation_time) break;
 		// Keybord input
 		const Uint8 *state = SDL_GetKeyboardState(NULL);
-		if (state[SDL_SCANCODE_SPACE]) {
-		}
+		if (state[SDL_SCANCODE_SPACE]) {}
 		// Mouse input
 		if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
 			FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
@@ -139,9 +142,9 @@ int main(int argc, char* args[]) {
 			mouseXPrev = mouseXCurr;
 			mouseYPrev = mouseYCurr;
 		}
-
+        // Update
 		FluidBlockSimulationStep(myFluid);
-		// drawing
+		// Draw
 		Draw(renderer, myFluid);
 		time += dt;
     }
