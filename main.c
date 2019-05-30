@@ -98,6 +98,13 @@ int main(int argc, char* args[]) {
 	float viscosity = 0;
 	float density = 32;
 	float force = 1;
+	int mode = 0;
+	enum modes {
+		DEFAULT, // 0
+		SINUS,   // 1
+		SPIKE    // 2
+	};
+	// Handle input file
 	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &simulation_time);
 	FluidBlock* myFluid = FluidBlockCreate(diffusion, viscosity);
 
@@ -132,16 +139,19 @@ int main(int argc, char* args[]) {
 	for (;;) {
         // Exit
 		if (PollEventsForQuit() || time > simulation_time) break;
-		// Keybord input
-		const Uint8 *state = SDL_GetKeyboardState(NULL);
-		if (state[SDL_SCANCODE_SPACE]) {}
-		// Mouse input
-		if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
-			FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
-                                  sgn(mouseXCurr-mouseXPrev), sgn(mouseYCurr-mouseYPrev), density, force);
-			mouseXPrev = mouseXCurr;
-			mouseYPrev = mouseYCurr;
-		}
+		switch (mode) {}
+		case DEFAULT:
+			// Keybord input
+			const Uint8 *state = SDL_GetKeyboardState(NULL);
+			if (state[SDL_SCANCODE_SPACE]) {}
+			// Mouse input
+			if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
+				FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
+                                      sgn(mouseXCurr-mouseXPrev), sgn(mouseYCurr-mouseYPrev), density, force);
+				mouseXPrev = mouseXCurr;
+				mouseYPrev = mouseYCurr;
+			}
+			break;
         // Update
 		FluidBlockSimulationStep(myFluid);
 		// Draw
@@ -154,6 +164,7 @@ int main(int argc, char* args[]) {
 	if (input_file != NULL) fclose(input_file);
 	FluidBlockFree(myFluid);
 	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(win);
 	SDL_Quit();
 	return 0;
 }

@@ -58,28 +58,28 @@ void FluidBlockAddVelocity(FluidBlock *block, int x, int y, float amountX, float
 
 void FluidBlockSimulationStep(FluidBlock *block)
 {
-	//TODO: Check if possible without deep copy
-	float visc     = block->visc;
-	float diff     = block->diff;
-	float *s       = block->s;
-	float *density = block->density;
-	float *vxCurr  = block->vxCurr;
-	float *vyCurr  = block->vyCurr;
-	float *vxPrev  = block->vxPrev;
-	float *vyPrev  = block->vyPrev;
+    // pDensity -> previous density
+	float visc      = block->visc;
+	float diff      = block->diff;
+	float *pDensity = block->s;
+	float *density  = block->density;
+	float *vxCurr   = block->vxCurr;
+	float *vyCurr   = block->vyCurr;
+	float *vxPrev   = block->vxPrev;
+	float *vyPrev   = block->vyPrev;
 
 	Diffuse(1, vxPrev, vxCurr, visc);
 	Diffuse(2, vyPrev, vyCurr, visc);
 
 	Project(vxPrev, vyPrev, vxCurr, vyCurr);
 
-	AddVection(1, vxCurr, vxPrev, vxPrev, vyPrev);
-	AddVection(2, vyCurr, vyPrev, vxPrev, vyPrev);
+	Advection(1, vxCurr, vxPrev, vxPrev, vyPrev);
+	Advection(2, vyCurr, vyPrev, vxPrev, vyPrev);
 
 	Project(vxCurr, vyCurr, vxPrev, vyPrev);
 
-	Diffuse(0, s, density, diff);
-	AddVection(0, density, s, vxCurr, vyCurr);
+	Diffuse(0, pDensity, density, diff);
+	Advection(0, density, pDensity, vxCurr, vyCurr);
 }
 
 void FluidBlockSpawnSource(FluidBlock* block, int x, int y, int w, int h, int dirX, int dirY, float density, float force)
