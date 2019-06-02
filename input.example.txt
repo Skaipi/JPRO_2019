@@ -3,5 +3,6 @@ Diffusion: 0.1
 Viscosity: 0.1
 Density: 24.0
 Force: 3.0
+Mode: 1
 Time: 6.0
 ============================================

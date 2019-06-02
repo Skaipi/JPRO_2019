@@ -10,6 +10,7 @@
 #include "fluid_block.h"
 #include "fluid_graphics.h"
 #include "output.h"
+#include "modes.h"
 
 #undef main
 
@@ -27,7 +28,7 @@ int sgn(int value)
 	return 0;
 }
 
-void ManageFileInput(FILE *input, float *diffusion, float *viscosity, float *density, float *force, float *time)
+void ManageFileInput(FILE *input, float *diffusion, float *viscosity, float *density, float *force, int *mode, float *time)
 {
 	int i = 0;
 	char line[128];
@@ -51,6 +52,9 @@ void ManageFileInput(FILE *input, float *diffusion, float *viscosity, float *den
 		}
 		if (strncmp(line, "Force:", strlen("Force:")) == 0) {
 			sscanf(line, "%*[^:]%*2c%f", force);
+		}
+		if (strncmp(line, "Mode:", strlen("Mode:")) == 0) {
+			sscanf(line, "%*[^:]%*2c%d", mode);
 		}
 		if (strncmp(line, "Time:", strlen("Time:")) == 0) {
 			sscanf(line, "%*[^:]%*2c%f", time);
@@ -93,19 +97,19 @@ int main(int argc, char* args[]) {
 
 	// Initialize simulation
 	srand(time(NULL));
-	float time = 0.0, simulation_time=5.0;
+	float time = 0.0, simulation_time=65.0;
 	float diffusion = 0;
 	float viscosity = 0;
 	float density = 32;
 	float force = 1;
 	int mode = 0;
-	enum modes {
-		DEFAULT, // 0
-		SINUS,   // 1
-		SPIKE    // 2
-	};
+	typedef enum {
+		DEFAULT,    // 0
+		SINUS,      // 1 
+		SPIRALE     // 2
+	} modes;
 	// Handle input file
-	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &simulation_time);
+	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &mode, &simulation_time);
 	FluidBlock* myFluid = FluidBlockCreate(diffusion, viscosity);
 
 	// Chcek SDL init
@@ -139,11 +143,11 @@ int main(int argc, char* args[]) {
 	for (;;) {
         // Exit
 		if (PollEventsForQuit() || time > simulation_time) break;
-		switch (mode) {}
-		case DEFAULT:
-			// Keybord input
-			const Uint8 *state = SDL_GetKeyboardState(NULL);
-			if (state[SDL_SCANCODE_SPACE]) {}
+		switch (mode) {
+		case SINUS:
+			SinusMode(myFluid, time, density, force);
+			break;
+		default:
 			// Mouse input
 			if (SDL_GetMouseState(&mouseXCurr, &mouseYCurr) && SDL_BUTTON(SDL_BUTTON_LEFT)) {
 				FluidBlockSpawnSource(myFluid, mouseXCurr/Scale, mouseYCurr/Scale, 4, 4,
@@ -152,6 +156,7 @@ int main(int argc, char* args[]) {
 				mouseYPrev = mouseYCurr;
 			}
 			break;
+		}
         // Update
 		FluidBlockSimulationStep(myFluid);
 		// Draw

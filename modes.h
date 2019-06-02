@@ -1,5 +1,5 @@
-void SinusMode(float time);
+#pragma once
 
-void SpikeMode(float time);
+void SinusMode(FluidBlock* block, float time, float density, float force);
 
-void DefaultMode();
+void SpikeMode(FluidBlock* block, float time, float density, float force);

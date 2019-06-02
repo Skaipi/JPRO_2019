@@ -1,4 +1,4 @@
-#Projekt koñcowy z zajêæ Jezyki Programowanie 2019
+#Projekt koncowy z zajec Jezyki Programowania 2019
 
 ## Kompilacja:
 
