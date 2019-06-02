@@ -97,7 +97,7 @@ int main(int argc, char* args[]) {
 
 	// Initialize simulation
 	srand(time(NULL));
-	float time = 0.0, simulation_time=65.0;
+	float time = 0.0, simulation_time=8.0;
 	float diffusion = 0;
 	float viscosity = 0;
 	float density = 32;
@@ -106,7 +106,7 @@ int main(int argc, char* args[]) {
 	typedef enum {
 		DEFAULT,    // 0
 		SINUS,      // 1 
-		SPIRALE     // 2
+		SPIRAL      // 2
 	} modes;
 	// Handle input file
 	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &mode, &simulation_time);
@@ -146,6 +146,9 @@ int main(int argc, char* args[]) {
 		switch (mode) {
 		case SINUS:
 			SinusMode(myFluid, time, density, force);
+			break;
+		case SPIRAL:
+			SpiralMode(myFluid, time, density, force);
 			break;
 		default:
 			// Mouse input

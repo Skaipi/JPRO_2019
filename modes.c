@@ -13,10 +13,14 @@ void SinusMode(FluidBlock* block, float time, float density, float force)
 	float yPos = N/2 + A*sin(time);
 	float xDir = sin(time);
 	float yDir = cos(time);
-	FluidBlockSpawnSource(block, xPos, yPos, 6, 6, xDir, yDir, density, force);
+	FluidBlockSpawnSource(block, xPos, yPos, 4, 4, xDir, yDir, density, force);
 }
 
-void SpikeMode(FluidBlock* block, float time, float density, float force)
+void SpiralMode(FluidBlock* block, float time, float density, float force)
 {
-	//FluidBlockSpawnSource();
+	float xPos = N/2;
+	float yPos = N/2;
+	float xDir = sin(time);
+	float yDir = cos(time);
+	FluidBlockSpawnSource(block, xPos, yPos, 4, 4, xDir, yDir, density, force);
 }
