@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "fluid_block.h"
+#include "fluid_output.h"
 
 extern const unsigned int WindowSize;
 
@@ -83,6 +84,7 @@ void SaveSimulation(FluidBlock* block)
 	FILE* output_file = fopen("output.txt", "w");
 	if (output_file == NULL) {
 		fprintf(stderr, "output file failed\n");
+		return;
 	}
 
 	SaveCurrentState(output_file, block);

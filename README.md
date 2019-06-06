@@ -1,8 +1,8 @@
-#Projekt koncowy z zajec Jezyki Programowania 2019
+# Projekt koncowy z zajec Jezyki Programowania 2019
 
 ## Kompilacja:
 
-  plik Makefile
+  ./makefile
 
 ## Biblioteki:
 

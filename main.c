@@ -9,8 +9,8 @@
 
 #include "fluid_block.h"
 #include "fluid_graphics.h"
-#include "output.h"
-#include "modes.h"
+#include "fluid_output.h"
+#include "fluid_modes.h"
 
 #undef main
 
@@ -83,7 +83,7 @@ int PollEventsForQuit() {
 }
 
 int main(int argc, char* args[]) {
-	// Input handle area
+	// Try to open input file
 	FILE* input_file = NULL;
 	if (argc > 1) {
 		input_file = fopen(args[1], "r");
@@ -108,6 +108,7 @@ int main(int argc, char* args[]) {
 		SINUS,      // 1 
 		SPIRAL      // 2
 	} modes;
+
 	// Handle input file
 	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &mode, &simulation_time);
 	FluidBlock* myFluid = FluidBlockCreate(diffusion, viscosity);
@@ -143,6 +144,7 @@ int main(int argc, char* args[]) {
 	for (;;) {
         // Exit
 		if (PollEventsForQuit() || time > simulation_time) break;
+		// Check simulation mode
 		switch (mode) {
 		case SINUS:
 			SinusMode(myFluid, time, density, force);
@@ -160,6 +162,7 @@ int main(int argc, char* args[]) {
 			}
 			break;
 		}
+
         // Update
 		FluidBlockSimulationStep(myFluid);
 		// Draw

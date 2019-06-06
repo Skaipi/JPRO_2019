@@ -31,5 +31,5 @@ void FluidBlockAddVelocity(FluidBlock *block, int x, int y, float amountX, float
 /* Make 1 simulation step with block */
 void FluidBlockSimulationStep(FluidBlock *block);
 
-/* Make turbulence box */
+/* Add density source */
 void FluidBlockSpawnSource(FluidBlock* block, int x, int y, int w, int h, float dirX, float dirY, float density, float force);

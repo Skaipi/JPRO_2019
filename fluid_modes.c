@@ -1,6 +1,6 @@
 #include <math.h>
 #include "fluid_block.h"
-#include "modes.h"
+#include "fluid_modes.h"
 
 extern const unsigned int WindowSize;
 
