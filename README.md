@@ -8,6 +8,14 @@
 
   SDL2 (https://wiki.libsdl.org/Installation)
 
+### Instalacja
+```
+* Pobranie i wypakowanie SLD2 source code
+* ./configure
+* make all
+* make install  
+```
+
 ## Sources:
 
 * https://en.wikipedia.org/wiki/Euler_equations_(fluid_dynamics)
