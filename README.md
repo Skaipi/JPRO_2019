@@ -15,6 +15,10 @@
 3) make all
 4) make install  
 ```
+* Wersja z apt-get
+```
+apt-get install libsdl2-dev
+```
 
 ## Sources:
 

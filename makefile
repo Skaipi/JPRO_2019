@@ -5,4 +5,4 @@ gcc -Wall -Wextra -o main.exe \
 	fluid_graphics.c \
 	fluid_output.c \
 	fluid_modes.c \
-	-lSDL2main -lSDL2
+	-lSDL2main -lSDL2 -lm
