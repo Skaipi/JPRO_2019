@@ -103,11 +103,11 @@ int main(int argc, char* args[]) {
 	float density = 32;
 	float force = 0.5;
 	int mode = 0;
-	typedef enum {
+	enum modes {
 		DEFAULT,    // 0
 		SINUS,      // 1 
 		SPIRAL      // 2
-	} modes;
+	};
 
 	// Handle input file
 	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &mode, &simulation_time);

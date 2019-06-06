@@ -1,6 +1,7 @@
 CC=gcc
 
-all: gcc -Wall -Wextra -o main.exe \
+all:
+	gcc -Wall -Wextra -o main.exe \
 	main.c \
 	fluid_block.c \
 	fluid_simulation.c \
