@@ -2,18 +2,17 @@
 
 ## Kompilacja:
 
-  Wykonanie pliku makefile w bashu
-  ```
-  ./makefile
-  ```
+  Pobierz albo sklonuj to repozytorium
 
-  makefile: [Instrukcje dla kompilatora gcc]
- 
+  Wykonanie pliku makefile
+  ```
+  make
+  ``` 
 ## Zewnetrzne Biblioteki:
 
-  SDL2 (https://wiki.libsdl.org/Installation)
+  SDL2 (https://www.libsdl.org/index.php)
 
-### Instalacja
+### Instalacja (Linux)
 ```
 1) Pobranie i wypakowanie SLD2 source code
 2) ./configure

@@ -101,7 +101,7 @@ int main(int argc, char* args[]) {
 	float diffusion = 0;
 	float viscosity = 0;
 	float density = 32;
-	float force = 1;
+	float force = 0.5;
 	int mode = 0;
 	typedef enum {
 		DEFAULT,    // 0
