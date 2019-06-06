@@ -10,10 +10,10 @@
 
 ### Instalacja
 ```
-* Pobranie i wypakowanie SLD2 source code
-* ./configure
-* make all
-* make install  
+1) Pobranie i wypakowanie SLD2 source code
+2) ./configure
+3) make all
+4) make install  
 ```
 
 ## Sources:
