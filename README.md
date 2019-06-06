@@ -2,9 +2,11 @@
 
 ## Kompilacja:
 
-  ./makefile
+  Wykonanie pliku makefile w bashu
 
-## Biblioteki:
+  makefile: [Instrukcje dla kompilatora gcc]
+ 
+## Zewnetrzne Biblioteki:
 
   SDL2 (https://wiki.libsdl.org/Installation)
 
