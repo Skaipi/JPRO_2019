@@ -3,6 +3,9 @@
 ## Kompilacja:
 
   Wykonanie pliku makefile w bashu
+  ```
+  ./makefile
+  ```
 
   makefile: [Instrukcje dla kompilatora gcc]
  
