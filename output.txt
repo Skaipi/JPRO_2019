@@ -1,7 +1,7 @@
 ======SIMULATION_OUTPUT======
-Average velocity:    0.04161
-Highest velocity:    0.30607
-Average density:     0.56737
-Highest density:    54.00026
-% of space filled:   8.73438
+Average velocity:    0.21112
+Highest velocity:    1.12942
+Average density:     7.79149
+Highest density:   143.13515
+% of space filled:  33.90234
 =============================

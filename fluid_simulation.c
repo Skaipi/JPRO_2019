@@ -20,9 +20,9 @@ void SetBoundary(int b, float *x)
 		x[N-1 + j*N] = b == 1 ? -x[N-2 + j*N] : x[N-2+ j*N];
 	}
     
-	x[0 + 0]         = 0.5f * (x[1 + 0]         + x[0 + 1*N]       + x[0 + 0*N]);
-	x[0 + (N-1)*N]   = 0.5f * (x[1 + (N-1)*N]   + x[0 + (N-2)*N]   + x[0 + (N-1)*N]);
-	x[N-1 + 0*N]     = 0.5f * (x[N-2 + 0*N]     + x[N-1 + 1*N]     + x[N-1 + 0*N]);
+	x[0 + 0]         = 0.5f * (x[1 + 0]         + x[0 + 1*N]       + x[0 + 0*N]      );
+	x[0 + (N-1)*N]   = 0.5f * (x[1 + (N-1)*N]   + x[0 + (N-2)*N]   + x[0 + (N-1)*N]  );
+	x[N-1 + 0*N]     = 0.5f * (x[N-2 + 0*N]     + x[N-1 + 1*N]     + x[N-1 + 0*N]    );
 	x[N-1 + (N-1)*N] = 0.5f * (x[N-2 + (N-1)*N] + x[N-1 + (N-2)*N] + x[N-1 + (N-1)*N]);
 }
 
@@ -35,6 +35,7 @@ void SetBoundary(int b, float *x)
 void LinSolve(int b, float *x, float *x0, float a, float c)
 {
 	float cRecip = 1.0 / c;
+	// Matrix revesre (as if...)
 	for (unsigned int k = 0; k < Iter; k++) {
 		for (unsigned int j = 1; j < N - 1; j++) {
 			for (unsigned int i = 1; i < N - 1; i++) {
@@ -47,22 +48,23 @@ void LinSolve(int b, float *x, float *x0, float a, float c)
 
 /**
  * Update previous states [based on neighbour nodes]
- * b -> direction in which we calculate
- * x -> previous state
+ * b  -> direction in which we calculate
+ * x  -> previous state
  * x0 -> current state
- * a -> parameter describing our fluid
+ * a  -> diffiusion rate
  */
 void Diffuse (int b, float *x, float *x0, float diff)
 {
     float a = dt * diff * (N - 2) * (N - 2);
-    LinSolve(b, x, x0, a, 1 + 6 * a);
+    LinSolve(b, x, x0, a, 1 + 4 * a);
 }
 
 /**
+ * Forces mass conserving
  * velocX -> previous velocity
  * velocY -> previous velocity
- * p -> current velocity
- * div -> current velocity
+ * p      -> current velocity
+ * div    -> current velocity
  */
 void Project(float *velocX, float *velocY, float *p, float *div)
 {
@@ -105,6 +107,7 @@ void Advection(int b, float *d, float *d0,  float *velocX, float *velocY)
     float ifloat, jfloat;
 	unsigned int i, j;    
 
+	// Linear interpolation
 	for(j = 1, jfloat = 1; j < N - 1; j++, jfloat++) {
 		for( i = 1, ifloat = 1; i < N - 1; i++, ifloat++) { 
 			tmp1 = dtx * velocX[i + j*N];

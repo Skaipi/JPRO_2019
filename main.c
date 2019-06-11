@@ -16,7 +16,7 @@
 /* Those are indended global variables */
 const unsigned int WindowSize = 160;
 const unsigned int Scale = 4;
-const unsigned int Iter = 4;
+const unsigned int Iter = 8;
 const double dt = 0.02;
 
 // Sign function
