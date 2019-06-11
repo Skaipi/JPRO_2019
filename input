@@ -1,0 +1,12 @@
+=======Fluid-Simulation-Example-Input=======
+Diffusion: 0.0
+Viscosity: 0.95
+Density: 24.0
+Force: 0.1
+Mode: 2
+Time: 40.0
+============================================
+Modes Enumeration:
+  0 -> default
+  1 -> sinus wave
+  2 -> fixed source
