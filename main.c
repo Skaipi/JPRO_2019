@@ -4,7 +4,6 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <SDL2/SDL.h>
 
 #include "fluid_block.h"
@@ -64,24 +63,6 @@ void ManageFileInput(FILE *input, float *diffusion, float *viscosity, float *den
     }
 }
 
-// Handle exit event
-int PollEventsForQuit() {
-	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
-		switch (e.type) {
-		case SDL_QUIT:
-			return true;
-			break;
-		case SDL_KEYDOWN:
-			if (e.key.keysym.sym == SDLK_ESCAPE) {
-				return true;
-			}
-			break;
-		}
-	}
-	return 0;
-}
-
 int main(int argc, char* args[]) {
 	// Try to open input file
 	FILE* input_file = NULL;
@@ -113,28 +94,10 @@ int main(int argc, char* args[]) {
 	if (input_file != NULL) ManageFileInput(input_file, &diffusion, &viscosity, &density, &force, &mode, &simulation_time);
 	FluidBlock* myFluid = FluidBlockCreate(diffusion, viscosity);
 
-	// Chcek SDL init
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS) != 0) {
-		fprintf(stderr, "SDL failed");
-		return 1;
-	}
-	// Make window
-	SDL_Window *win = SDL_CreateWindow("Fluid Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                       WindowSize*Scale, WindowSize*Scale, SDL_WINDOW_SHOWN);
-	if (win == NULL) {
-		fprintf(stderr, "SDL failed");
-		SDL_Quit();
-		return 2;
-	}
-	// Make window renderer
-	SDL_Renderer *renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	if (renderer == NULL) {
-		fprintf(stderr, "SDL failed");
-		SDL_DestroyWindow(win);
-		SDL_Quit();
-		return 3;
-	}
-
+	// SDL init
+	SDL_Window *win = WindowInit();
+	SDL_Renderer *renderer = RendererInit(win);
+		
 	// Initialize mouse events
 	int mouseXCurr = 0, mouseXPrev = 0;
 	int mouseYCurr = 0, mouseYPrev = 0;
